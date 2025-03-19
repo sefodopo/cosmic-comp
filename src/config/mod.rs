@@ -10,8 +10,8 @@ use crate::{
 };
 use anyhow::Context;
 use cosmic_config::{ConfigGet, CosmicConfigEntry};
-use cosmic_settings_config::window_rules::ApplicationException;
 use cosmic_settings_config::{shortcuts, window_rules, Shortcuts};
+use cosmic_settings_config::{window_rules::ApplicationException, VimSymbols};
 use serde::{Deserialize, Serialize};
 use smithay::utils::{Clock, Monotonic};
 use smithay::wayland::xdg_activation::XdgActivationState;
@@ -70,6 +70,8 @@ pub struct Config {
     pub tiling_exceptions: Vec<ApplicationException>,
     /// System actions from `com.system76.CosmicSettings.Shortcuts`
     pub system_actions: BTreeMap<shortcuts::action::System, String>,
+    /// Vim Symbols from `com.system76.CosmicSettings.Shortcuts`
+    pub vim_symbols: VimSymbols,
 }
 
 #[derive(Debug)]
@@ -226,6 +228,7 @@ impl Config {
         let settings_context = shortcuts::context().expect("Failed to load shortcuts config");
         let system_actions = shortcuts::system_actions(&settings_context);
         let shortcuts = shortcuts::shortcuts(&settings_context);
+        let vim_symbols = shortcuts::vim_symbols(&settings_context);
 
         // Listen for updates to the keybindings config.
         match cosmic_config::calloop::ConfigWatchSource::new(&settings_context) {
@@ -241,6 +244,10 @@ impl Config {
                             "system_actions" => {
                                 state.common.config.system_actions =
                                     shortcuts::system_actions(&config);
+                            }
+
+                            "vim_symbols" => {
+                                state.common.config.vim_symbols = shortcuts::vim_symbols(&config);
                             }
 
                             _ => (),
@@ -311,6 +318,7 @@ impl Config {
             shortcuts,
             system_actions,
             tiling_exceptions,
+            vim_symbols,
         }
     }
 

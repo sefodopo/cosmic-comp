@@ -148,3 +148,6 @@ cosmic-client-toolkit = { git = "https://github.com/pop-os//cosmic-protocols", b
 
 [patch.crates-io]
 smithay = { git = "https://github.com/smithay/smithay.git", rev = "eb45814" }
+
+[patch."https://github.com/pop-os/cosmic-settings-daemon"]
+cosmic-settings-config = { git = "https://github.com/sefodopo/cosmic-settings-daemon", branch = "keymap" }

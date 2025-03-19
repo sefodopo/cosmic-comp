@@ -1682,12 +1682,23 @@ impl State {
 
         // Special case resizing with regards to arrow keys
         if let Some(direction) = shell.resize_mode().0.active_direction() {
-            let resize_edge = match handle.modified_sym() {
-                Keysym::Left | Keysym::h | Keysym::H => Some(ResizeEdge::LEFT),
-                Keysym::Down | Keysym::j | Keysym::J => Some(ResizeEdge::BOTTOM),
-                Keysym::Up | Keysym::k | Keysym::K => Some(ResizeEdge::TOP),
-                Keysym::Right | Keysym::l | Keysym::L => Some(ResizeEdge::RIGHT),
-                _ => None,
+            let resize_edge = if let Some(direction) =
+                self.common.config.vim_symbols.get(&handle.modified_sym())
+            {
+                match direction {
+                    Direction::Left => Some(ResizeEdge::LEFT),
+                    Direction::Down => Some(ResizeEdge::BOTTOM),
+                    Direction::Up => Some(ResizeEdge::TOP),
+                    Direction::Right => Some(ResizeEdge::RIGHT),
+                }
+            } else {
+                match handle.modified_sym() {
+                    Keysym::Left => Some(ResizeEdge::LEFT),
+                    Keysym::Down => Some(ResizeEdge::BOTTOM),
+                    Keysym::Up => Some(ResizeEdge::TOP),
+                    Keysym::Right => Some(ResizeEdge::RIGHT),
+                    _ => None,
+                }
             };
 
             if let Some(mut edge) = resize_edge {
