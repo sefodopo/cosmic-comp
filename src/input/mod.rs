@@ -1713,6 +1713,7 @@ impl State {
                 let key_pattern = shortcuts::Binding {
                     modifiers: cosmic_modifiers_from_smithay(modifiers.clone()),
                     key: Some(handle.modified_sym()),
+                    keycode: None,
                     description: None,
                 };
 
@@ -1771,6 +1772,7 @@ impl State {
                 shortcuts::Binding {
                     modifiers: shortcuts::Modifiers::default(),
                     key: Some(Keysym::Escape),
+                    keycode: None,
                     description: None,
                 },
             )));
